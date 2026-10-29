@@ -1,0 +1,1402 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>身体数据 · Health</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d6bfe' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19.5 12.6 12 20l-7.5-7.4A5 5 0 0 1 12 5.6a5 5 0 0 1 7.5 7z'/%3E%3Cpath d='M3.5 12h4l1.8-3.2 2.4 6.4 1.8-3.2h3.5'/%3E%3C/svg%3E">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --bg-sub: #f8f9fb;
+    --fg: #1c1e21;
+    --fg2: #6b7280;
+    --fg3: #9aa1ab;
+    --bd: #e5e7eb;
+    --bd2: #eef0f3;
+    --hov: #f4f5f7;
+    --act: #eef0f4;
+    --card: #ffffff;
+    --blue: #4d6bfe;
+    --purple: #7b6bd6;
+    --teal: #0e9f8e;
+    --amber: #d97706;
+    --rose: #e11d48;
+    --ok: #16a34a;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 14px 38px rgba(15, 23, 42, 0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161616;
+      --bg-sub: #1b1b1b;
+      --fg: #e8eaed;
+      --fg2: #a0a4ab;
+      --fg3: #787d86;
+      --bd: #2a2a2a;
+      --bd2: #222222;
+      --hov: #1f1f1f;
+      --act: #262626;
+      --card: #1c1c1c;
+      --blue: #6882ff;
+      --purple: #9384e8;
+      --teal: #2dd4bf;
+      --amber: #f59e0b;
+      --rose: #fb7185;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: none;
+      --shadow-lg: 0 18px 46px rgba(0, 0, 0, 0.55);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { background: var(--bg); height: 100%; overflow-x: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 13.5px/1.55 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    padding: 20px 24px 36px;
+    min-height: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--bd);
+  }
+  .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+  .brand-ic {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #4d6bfe 0%, #7b6bd6 100%);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    flex: none; box-shadow: 0 4px 14px rgba(77, 107, 254, 0.25);
+  }
+  .brand-ic svg { width: 23px; height: 23px; }
+  .brand-txt h1 {
+    font-size: 21px; font-weight: 700; letter-spacing: -0.3px; margin: 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .brand-txt .sub { font-size: 12.5px; color: var(--fg2); margin-top: 2px; }
+  .status-pill {
+    font-size: 11px; font-weight: 500; padding: 1px 8px; border-radius: 999px;
+    background: color-mix(in srgb, var(--ok) 12%, transparent);
+    color: var(--ok); border: 1px solid color-mix(in srgb, var(--ok) 38%, var(--bd));
+  }
+
+  .toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-top: 14px;
+  }
+  .seg {
+    display: inline-flex; background: var(--bg-sub); border: 1px solid var(--bd);
+    border-radius: 999px; padding: 3px; gap: 2px; flex-wrap: wrap;
+  }
+  .seg button {
+    font: inherit; font-size: 12.5px; font-weight: 500; color: var(--fg2);
+    background: transparent; border: 0; padding: 5px 12px; border-radius: 999px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s;
+  }
+  .seg button svg { width: 14px; height: 14px; opacity: 0.85; }
+  .seg button:hover { color: var(--fg); }
+  .seg button.on {
+    background: var(--card); color: var(--blue); font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    font: inherit; font-size: 12.5px; font-weight: 500; padding: 6px 13px;
+    border: 1px solid var(--bd); border-radius: 999px; background: var(--card);
+    color: var(--fg); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .btn svg { width: 14px; height: 14px; }
+  .btn:hover { border-color: var(--blue); color: var(--blue); }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { filter: brightness(1.07); color: #fff; }
+
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px; margin-top: 16px;
+  }
+  @media (max-width: 1120px) { .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 640px)  { .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .kpi {
+    background: var(--card); border: 1px solid var(--bd); border-radius: 14px;
+    padding: 13px 14px 12px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 6px; min-width: 0;
+    transition: border-color 0.15s;
+  }
+  .kpi:hover { border-color: color-mix(in srgb, var(--blue) 45%, var(--bd)); }
+  .kpi-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .kpi-label { font-size: 12px; color: var(--fg2); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kpi-ic { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .kpi-ic svg { width: 15px; height: 15px; }
+  .kpi-val { font-size: 21px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.15; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kpi-val small { font-size: 11.5px; font-weight: 500; color: var(--fg2); margin-left: 2px; letter-spacing: 0; }
+  .kpi-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: 11.5px; color: var(--fg3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500;
+    padding: 0 7px; border-radius: 999px; border: 1px solid var(--bd); color: var(--fg2); background: var(--bg-sub); flex: none;
+  }
+  .tag.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, var(--bd)); background: color-mix(in srgb, var(--ok) 9%, transparent); }
+  .tag.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, var(--bd)); background: color-mix(in srgb, var(--warn) 9%, transparent); }
+  .tag.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, var(--bd)); background: color-mix(in srgb, var(--danger) 9%, transparent); }
+  .tag.blue { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 40%, var(--bd)); background: color-mix(in srgb, var(--blue) 9%, transparent); }
+
+  .bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+  .span-12 { grid-column: span 12; }
+  .span-8  { grid-column: span 8; }
+  .span-7  { grid-column: span 7; }
+  .span-5  { grid-column: span 5; }
+  .span-4  { grid-column: span 4; }
+  @media (max-width: 980px) { .span-8, .span-7, .span-5, .span-4 { grid-column: span 12; } }
+
+  .card {
+    background: var(--card); border: 1px solid var(--bd); border-radius: 14px;
+    padding: 16px 18px 15px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; min-width: 0;
+  }
+  .c-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .c-title { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 650; margin: 0; }
+  .c-title .ic-dot { width: 24px; height: 24px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+  .c-title .ic-dot svg { width: 14px; height: 14px; }
+  .c-sub { font-size: 12px; color: var(--fg3); }
+  .legend { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 11.5px; color: var(--fg2); }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .legend i { display: inline-block; width: 10px; height: 3px; border-radius: 2px; }
+  .legend i.dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .chart-box { position: relative; width: 100%; margin-top: 2px; }
+  svg.chart { display: block; width: 100%; height: auto; overflow: visible; user-select: none; }
+  .axis-txt { font-size: 10.5px; fill: var(--fg3); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .grid-line { stroke: var(--bd2); stroke-width: 1; }
+
+  .body-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: 12px; margin-top: 4px; }
+  @media (max-width: 560px) { .body-hero { grid-template-columns: 1fr; } }
+  .bmi-box {
+    background: var(--bg-sub); border: 1px solid var(--bd2); border-radius: 12px;
+    padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px;
+  }
+  .bmi-scale {
+    position: relative; height: 8px; border-radius: 999px;
+    background: linear-gradient(90deg, #38bdf8 0%, #22c55e 28%, #22c55e 62%, #f59e0b 80%, #ef4444 100%);
+    margin: 8px 0 4px;
+  }
+  .bmi-pin {
+    position: absolute; top: -4px; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--card); border: 3px solid var(--fg); transform: translateX(-50%);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  .bmi-ticks { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--fg3); font-variant-numeric: tabular-nums; }
+  .vitals-mini { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .v-cell { background: var(--bg-sub); border: 1px solid var(--bd2); border-radius: 10px; padding: 9px 11px; min-width: 0; }
+  .v-cell .k { font-size: 11px; color: var(--fg3); }
+  .v-cell .v { font-size: 16px; font-weight: 650; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .v-cell .v small { font-size: 11px; color: var(--fg2); font-weight: 400; margin-left: 2px; }
+
+  .cat-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cat-pill {
+    font: inherit; font-size: 11.5px; padding: 3px 10px; border-radius: 999px;
+    border: 1px solid var(--bd); background: transparent; color: var(--fg2); cursor: pointer;
+  }
+  .cat-pill.on {
+    background: color-mix(in srgb, var(--blue) 12%, transparent);
+    color: var(--blue); border-color: color-mix(in srgb, var(--blue) 45%, var(--bd)); font-weight: 600;
+  }
+  .lab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 10px; margin-top: 4px; }
+  .lab-item {
+    border: 1px solid var(--bd2); background: var(--bg-sub); border-radius: 11px;
+    padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .lab-top { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+  .lab-name { font-size: 12.5px; font-weight: 600; color: var(--fg); display: flex; align-items: center; gap: 5px; }
+  .lab-code {
+    font-size: 10.5px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    color: var(--fg3); background: var(--card); padding: 0 5px; border-radius: 4px; border: 1px solid var(--bd);
+  }
+  .lab-val { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .lab-val small { font-size: 11px; font-weight: 400; color: var(--fg3); margin-left: 2px; }
+  .range-track { position: relative; height: 6px; border-radius: 999px; background: var(--bd); overflow: hidden; }
+  .range-safe { position: absolute; left: 18%; right: 18%; top: 0; bottom: 0; background: color-mix(in srgb, var(--ok) 32%, transparent); }
+  .range-dot { position: relative; height: 6px; margin-top: -6px; pointer-events: none; }
+  .range-dot i {
+    position: absolute; top: -2px; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--ok); border: 2px solid var(--card); transform: translateX(-50%); box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .range-dot.warn i { background: var(--warn); }
+  .range-dot.danger i { background: var(--danger); }
+  .lab-foot { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--fg3); font-variant-numeric: tabular-nums; }
+
+  .tbl-wrap { overflow-x: auto; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { text-align: left; font-weight: 500; font-size: 11.5px; color: var(--fg3); padding: 8px 10px; border-bottom: 1px solid var(--bd); white-space: nowrap; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--bd2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  tr:hover td { background: var(--hov); }
+
+  .tip {
+    position: fixed; pointer-events: none; background: rgba(20, 22, 26, 0.94); color: #fff;
+    font-size: 12px; line-height: 1.5; padding: 8px 11px; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28); opacity: 0; transition: opacity 0.12s; z-index: 40; max-width: 260px;
+  }
+  .tip.on { opacity: 1; }
+  .toast {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+    background: #18181b; color: #fff; padding: 8px 16px; border-radius: 999px;
+    font-size: 12.5px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 60;
+  }
+  .toast.on { opacity: 0.95; }
+
+  .mask {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); display: none;
+    align-items: center; justify-content: center; padding: 20px; z-index: 50;
+  }
+  .mask.on { display: flex; }
+  .modal {
+    width: min(580px, 100%); max-height: 88vh; overflow: auto; background: var(--card);
+    color: var(--fg); border: 1px solid var(--bd); border-radius: 16px;
+    padding: 20px 22px 18px; box-shadow: var(--shadow-lg);
+  }
+  .modal h2 { margin: 0 0 4px; font-size: 17px; }
+  .modal .hint { font-size: 12px; color: var(--fg2); margin-bottom: 14px; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+  @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 12px; color: var(--fg2); font-weight: 500; }
+  .field input, .field select {
+    font: inherit; font-size: 13px; color: var(--fg); background: var(--bg);
+    border: 1px solid var(--bd); border-radius: 9px; padding: 7px 10px; outline: none;
+  }
+  .field input:focus, .field select:focus { border-color: var(--blue); }
+  .modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--bd2); }
+  .foot-note { margin-top: 22px; text-align: center; font-size: 12px; color: var(--fg3); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <div class="brand">
+      <div class="brand-ic" id="brandIcon"></div>
+      <div class="brand-txt">
+        <h1>
+          <span>身体数据</span>
+          <span class="status-pill" id="syncBadge">已同步 70 次训练</span>
+        </h1>
+        <div class="sub">体测档案 · 运动表现 · 血液生化指标 · 数据源 .claude/preview/health/data.json</div>
+      </div>
+    </div>
+    <div class="actions">
+      <select class="btn" id="rangeSel" title="筛选运动时间范围">
+        <option value="all">全部周期 (2022–2026)</option>
+        <option value="365">近一年</option>
+        <option value="180">近半年</option>
+        <option value="90">近 90 天</option>
+      </select>
+      <button class="btn" id="btnAddLab"></button>
+      <button class="btn primary" id="btnAddBody"></button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="seg" id="viewTabs">
+      <button type="button" class="on" data-view="all"><span data-ic="pulse"></span>全景看板</button>
+      <button type="button" data-view="run"><span data-ic="run"></span>跑步表现 (70)</button>
+      <button type="button" data-view="body"><span data-ic="scale"></span>身高体重与体征</button>
+      <button type="button" data-view="blood"><span data-ic="drop"></span>血液各项指标</button>
+      <button type="button" data-view="logs"><span data-ic="list"></span>历史记录明细</button>
+    </div>
+    <div class="c-sub" id="summaryLine"></div>
+  </div>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="bento" id="bentoGrid">
+
+    <section class="card span-8" data-sec="run">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--blue) 14%,transparent);color:var(--blue)" data-ic="trend"></span>配速走势与 5 次滑动均值</h2>
+          <div class="c-sub">纵轴向上为更快 · 虚线为 1km 体测参考线 (3'50"/km) · 悬停查看单次详情</div>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--blue)"></i>单次配速</span>
+          <span><i style="background:var(--blue)"></i>5次滑动均值</span>
+          <span><i style="background:var(--amber)"></i>步频 (spm)</span>
+          <span><i style="background:var(--ok)"></i>3'50" 达标线</span>
+        </div>
+      </div>
+      <div class="chart-box">
+        <svg id="svgTrend" class="chart" viewBox="0 0 780 250"></svg>
+      </div>
+    </section>
+
+    <section class="card span-4" data-sec="body">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal)" data-ic="scale"></span>身体形态与静息体征</h2>
+          <div class="c-sub" id="bodyDateSub">最新体测快照</div>
+        </div>
+        <button class="btn" style="padding:3px 10px;font-size:11.5px" id="btnQuickBody">更新体测</button>
+      </div>
+      <div id="bodyPanel"></div>
+    </section>
+
+    <section class="card span-5" data-sec="run">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--purple) 14%,transparent);color:var(--purple)" data-ic="bolt"></span>步频 × 步长 动力学分布</h2>
+          <div class="c-sub">虚线为等配速双曲线 (速度 = 步频 × 步长) · 颜色越深代表日期越近</div>
+        </div>
+      </div>
+      <div class="chart-box">
+        <svg id="svgScatter" class="chart" viewBox="0 0 460 235"></svg>
+      </div>
+    </section>
+
+    <section class="card span-7" data-sec="run">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--amber) 14%,transparent);color:var(--amber)" data-ic="bar"></span>月度训练负荷与距离档位配速箱线</h2>
+          <div class="c-sub">左：各活跃月份累计里程 (km) · 右：不同距离档位最快/平均/最慢配速区间</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:14px;align-items:center" class="chart-box">
+        <svg id="svgMonthly" class="chart" viewBox="0 0 400 220"></svg>
+        <svg id="svgDistBox" class="chart" viewBox="0 0 320 220"></svg>
+      </div>
+    </section>
+
+    <section class="card span-12" data-sec="blood">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--rose) 14%,transparent);color:var(--rose)" data-ic="drop"></span>血液生化与体检指标靶向图谱</h2>
+          <div class="c-sub" id="bloodSub">绿色区间代表医学参考范围，圆点游标指示当前实测值在参考上下限中的位置</div>
+        </div>
+        <div class="cat-tabs" id="bloodCatTabs"></div>
+      </div>
+      <div class="lab-grid" id="bloodGrid"></div>
+    </section>
+
+    <section class="card span-12" data-sec="body" id="secWeightHistory">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--teal) 14%,transparent);color:var(--teal)" data-ic="ruler"></span>体重 / BMI / 体脂率历史追踪</h2>
+          <div class="c-sub">按日期持续记录体重、身高、体脂率、静息心率与血压变化</div>
+        </div>
+      </div>
+      <div id="weightHistoryBox"></div>
+    </section>
+
+    <section class="card span-12" data-sec="logs">
+      <div class="c-head">
+        <div>
+          <h2 class="c-title"><span class="ic-dot" style="background:color-mix(in srgb,var(--blue) 14%,transparent);color:var(--blue)" data-ic="list"></span>跑步训练历史明细</h2>
+          <div class="c-sub" id="logTableSub">按时间倒序排列</div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnToggleAllLogs" style="padding:4px 11px;font-size:12px">展开全部 70 条</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table id="runTable">
+          <thead>
+            <tr>
+              <th>日期时间</th>
+              <th>距离</th>
+              <th>用时</th>
+              <th>平均配速</th>
+              <th>步频</th>
+              <th>步长</th>
+              <th>功率</th>
+              <th>消耗热量</th>
+              <th>训练负荷</th>
+              <th>评级</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot-note">
+    数据源：<code>.claude/preview/health/data.json</code> · 在线录入自动经网关 <code>/gateway/file/write</code> 持久化
+  </div>
+
+  <div class="tip" id="tip"></div>
+  <div class="toast" id="toast"></div>
+
+  <div class="mask" id="modalMask">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2 id="modalTitle">录入身体体征数据</h2>
+      <div class="hint" id="modalHint">保存后自动写入 <code>.claude/preview/health/data.json</code> 并刷新图表。</div>
+      <div id="modalBody"></div>
+      <div class="modal-foot">
+        <button class="btn" id="modalCancel">取消</button>
+        <button class="btn primary" id="modalSave">保存记录</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const ICONS = {
+  brand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.57 12 20l-7.5-7.43A5 5 0 0 1 12 5.5a5 5 0 0 1 7.5 7.07z"/><path d="M3.5 12h4.2l1.7-3.2 2.5 6.4 1.8-3.2h3.8"/></svg>',
+  pulse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.4-6 4.2 12 2.4-6h5"/></svg>',
+  run: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="4.5" r="2"/><path d="M10.5 9.5 7 11l-2.5 3.5"/><path d="m10.5 9.5 4 2.5 3.5-1.5"/><path d="m14.5 12-2.5 4.5 3.5 4"/><path d="m9.5 14.5-3.5 1-2.5 4"/></svg>',
+  scale: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M8 8.5a5.5 5.5 0 0 1 8 0"/><path d="m12 10.5 2-2.5"/><circle cx="12" cy="10.5" r="1"/></svg>',
+  drop: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8c3.8 4.8 6.5 8.1 6.5 11.7a6.5 6.5 0 1 1-13 0C5.5 10.9 8.2 7.6 12 2.8z"/><path d="M9.5 15a2.8 2.8 0 0 0 2.8 2.5"/></svg>',
+  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
+  ruler: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5 20.5 7.5 7.5 20.5 3.5 16.5z"/><path d="m13.5 6.5 2 2M10.5 9.5l2 2M7.5 12.5l2 2"/></svg>',
+  timer: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9.5 2.5h5"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5h6.5L10 22l9.5-11.5H13L13 2z"/></svg>',
+  trend: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
+  bar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11M10 20V5M16 20v-8M21 20H3"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 5 3.2 8.6 7.5 10 4.3-1.4 7.5-5 7.5-10V6L12 3z"/><path d="m9 12 2 2 4-4"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>'
+};
+
+const DEFAULT_DATA = {"updatedAt":"2026-10-29","profile":{"name":"示例用户","sex":"男","birthYear":2000,"heightCm":175.0,"targetWeightKg":65.0,"targetPaceSec":230,"bloodType":"O","note":"演示数据：本仓库不含任何真实个人健康记录"},"bodyRecords":[{"date":"2024-12-31","heightCm":175.0,"weightKg":62.0,"bodyFatPct":17.2,"restingHr":62,"note":"示例数据"},{"date":"2025-12-31","heightCm":175.0,"weightKg":63.0,"bodyFatPct":16.9,"restingHr":60,"note":"示例数据"},{"date":"2026-10-29","heightCm":175.0,"weightKg":64.0,"bodyFatPct":16.4,"restingHr":58,"bpSys":118,"bpDia":75,"spo2":99,"note":"示例数据"}],"bloodReports":[{"date":"2026-10-24","source":"示例化验单（演示数据，非真实结果）","items":[{"cat":"肝功能","code":"ALT","name":"丙氨酸氨基转移酶","val":21,"min":9,"max":50,"unit":"U/L"},{"cat":"肝功能","code":"AST","name":"天门冬氨酸氨基转移酶","val":24,"min":15,"max":40,"unit":"U/L"},{"cat":"肝功能","code":"TP","name":"总蛋白","val":72.5,"min":65.0,"max":85.0,"unit":"g/L"},{"cat":"肝功能","code":"ALB","name":"白蛋白","val":46.2,"min":40.0,"max":55.0,"unit":"g/L"},{"cat":"肾功能","code":"UREA","name":"尿素","val":5.2,"min":3.1,"max":8.0,"unit":"mmol/L"},{"cat":"肾功能","code":"CREA","name":"肌酐","val":82,"min":57,"max":97,"unit":"μmol/L"},{"cat":"肾功能","code":"UA","name":"尿酸","val":360,"min":208,"max":428,"unit":"μmol/L"},{"cat":"血脂代谢","code":"TC","name":"总胆固醇","val":4.31,"min":0,"max":5.18,"unit":"mmol/L"},{"cat":"血脂代谢","code":"TG","name":"甘油三酯","val":0.88,"min":0,"max":1.7,"unit":"mmol/L"},{"cat":"血脂代谢","code":"HDL-C","name":"高密度脂蛋白胆固醇","val":1.41,"min":1.16,"max":1.42,"unit":"mmol/L"},{"cat":"血脂代谢","code":"LDL-C","name":"低密度脂蛋白胆固醇","val":2.52,"min":0,"max":3.37,"unit":"mmol/L"},{"cat":"血糖代谢","code":"GLU","name":"血糖","val":5.0,"min":3.9,"max":6.1,"unit":"mmol/L"}]}],"runs":[{"d":"2026-05-03","t":"19:00","km":2,"dur":420,"p":210,"c":165,"s":1.73,"w":250,"kcal":72,"load":30,"e":4},{"d":"2026-05-06","t":"20:11","km":1.0,"dur":217,"p":217,"c":168,"s":1.65,"w":255,"kcal":36,"load":15,"e":4},{"d":"2026-05-09","t":"21:22","km":1.0,"dur":224,"p":224,"c":171,"s":1.57,"w":260,"kcal":36,"load":15,"e":4},{"d":"2026-06-12","t":"19:33","km":5,"dur":1155,"p":231,"c":174,"s":1.49,"w":265,"kcal":180,"load":75,"e":4},{"d":"2026-06-15","t":"20:44","km":1.0,"dur":238,"p":238,"c":177,"s":1.42,"w":270,"kcal":36,"load":15,"e":4},{"d":"2026-06-18","t":"21:55","km":1.0,"dur":245,"p":245,"c":180,"s":1.36,"w":275,"kcal":36,"load":15,"e":4},{"d":"2026-07-21","t":"19:06","km":4,"dur":1008,"p":252,"c":165,"s":1.44,"w":280,"kcal":144,"load":60,"e":4},{"d":"2026-07-24","t":"20:17","km":1.0,"dur":259,"p":259,"c":168,"s":1.38,"w":285,"kcal":36,"load":15,"e":4},{"d":"2026-07-27","t":"21:28","km":1.0,"dur":266,"p":266,"c":171,"s":1.32,"w":290,"kcal":36,"load":15,"e":4},{"d":"2026-08-04","t":"19:39","km":3,"dur":819,"p":273,"c":174,"s":1.26,"w":295,"kcal":108,"load":45,"e":4},{"d":"2026-08-07","t":"20:50","km":1.0,"dur":210,"p":210,"c":177,"s":1.61,"w":300,"kcal":36,"load":15,"e":4},{"d":"2026-08-10","t":"21:01","km":1.0,"dur":217,"p":217,"c":180,"s":1.54,"w":305,"kcal":36,"load":15,"e":4},{"d":"2026-09-13","t":"19:12","km":2,"dur":448,"p":224,"c":165,"s":1.62,"w":310,"kcal":72,"load":30,"e":4},{"d":"2026-09-16","t":"20:23","km":1.0,"dur":231,"p":231,"c":168,"s":1.55,"w":315,"kcal":36,"load":15,"e":4}]};
+const TOKEN = new URLSearchParams(location.search).get('token') || '';
+const ROOT_LABEL = '全局根 · 散装对话';
+const DATA_PATH = '.claude/preview/health/data.json';
+
+let DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
+let DATA_MTIME = 0;
+let RANGE = 'all';
+let VIEW = 'all';
+let BLOOD_CAT = '全部';
+let SHOW_ALL_LOGS = false;
+let MODAL_MODE = 'body';
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nice = (x, d = 1) => Number(x).toFixed(d).replace(/\.0+$/, '');
+const paceStr = (s) => {
+  if (!s || !isFinite(s)) return '—';
+  const m = Math.floor(s / 60), r = Math.round(s - m * 60);
+  return m + "'" + String(r).padStart(2, '0') + '"';
+};
+const durStr = (s) => {
+  if (!s || !isFinite(s)) return '—';
+  const m = Math.floor(s / 60), r = Math.round(s % 60);
+  return m + ':' + String(r).padStart(2, '0');
+};
+const parseDay = (d) => new Date(d + 'T00:00:00');
+function api(p) { return p + (TOKEN ? (p.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(TOKEN) : ''); }
+
+let toastTimer = 0;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('on'), 2200);
+}
+
+function mountIcons() {
+  $('brandIcon').innerHTML = ICONS.brand;
+  $('btnAddBody').innerHTML = ICONS.plus + '<span>录入身高/体重/体征</span>';
+  $('btnAddLab').innerHTML = ICONS.drop + '<span>录入血液指标</span>';
+  document.querySelectorAll('[data-ic]').forEach((el) => {
+    const k = el.getAttribute('data-ic');
+    if (ICONS[k]) el.innerHTML = ICONS[k];
+  });
+}
+
+async function loadData() {
+  try {
+    const localRaw = localStorage.getItem('floria_health_data_v2');
+    if (localRaw) {
+      const parsed = JSON.parse(localRaw);
+      if (parsed && Array.isArray(parsed.runs)) DATA = parsed;
+    }
+  } catch {}
+  try {
+    const r = await fetch(api('/gateway/file?label=' + encodeURIComponent(ROOT_LABEL) + '&path=' + encodeURIComponent(DATA_PATH)));
+    if (r.ok) {
+      const etag = r.headers.get('ETag') || '';
+      const m = /"?([\d.]+)"?/.exec(etag);
+      DATA_MTIME = m ? Number(m[1]) : 0;
+      const remote = JSON.parse(await r.text());
+      if (remote && Array.isArray(remote.runs)) DATA = remote;
+    }
+  } catch {}
+  renderAll();
+}
+
+async function saveData(toastMsg) {
+  DATA.updatedAt = new Date().toISOString().slice(0, 10);
+  try { localStorage.setItem('floria_health_data_v2', JSON.stringify(DATA)); } catch {}
+  try {
+    const r = await fetch(api('/gateway/file/write'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        label: ROOT_LABEL,
+        path: DATA_PATH,
+        content: JSON.stringify(DATA, null, 2),
+        ...(DATA_MTIME ? { baseMtime: DATA_MTIME } : {})
+      })
+    });
+    if (r.ok) {
+      const d = await r.json().catch(() => ({}));
+      if (d.mtime) DATA_MTIME = d.mtime;
+      toast(toastMsg || '已保存至 .claude/preview/health/data.json');
+      renderAll();
+      return true;
+    }
+  } catch {}
+  toast((toastMsg || '已保存') + '（本地缓存已更新）');
+  renderAll();
+  return false;
+}
+
+function filteredRuns() {
+  const all = (DATA.runs || []).slice().sort((a, b) => a.d.localeCompare(b.d));
+  if (RANGE === 'all') return all;
+  const latestTs = all.length ? parseDay(all[all.length - 1].d).getTime() : Date.now();
+  const cut = latestTs - Number(RANGE) * 864e5;
+  return all.filter((r) => parseDay(r.d).getTime() >= cut);
+}
+
+function latestBody() {
+  const list = (DATA.bodyRecords || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  return list[list.length - 1] || { date: '—', heightCm: 175, weightKg: 66, bodyFatPct: 15.8, restingHr: 58, bpSys: 116, bpDia: 74, waistCm: 74.5 };
+}
+
+function latestBlood() {
+  const reps = (DATA.bloodReports || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+  return reps[reps.length - 1] || { date: '—', source: '暂无', items: [] };
+}
+
+function renderKPIs(rs) {
+  const b = latestBody();
+  const hM = (b.heightCm || 175) / 100;
+  const bmi = b.weightKg && hM ? b.weightKg / (hM * hM) : 0;
+  const bmiStatus = bmi < 18.5 ? ['偏瘦', 'warn'] : bmi < 24 ? ['标准体型', 'ok'] : bmi < 28 ? ['超重', 'warn'] : ['偏胖', 'danger'];
+
+  const totalKm = rs.reduce((a, r) => a + r.km, 0);
+  const avgPace = totalKm > 0 ? rs.reduce((a, r) => a + r.p * r.km, 0) / totalKm : 0;
+  const bestRun = rs.length ? rs.reduce((a, r) => (r.p < a.p ? r : a), rs[0]) : null;
+  const avgCad = rs.length ? rs.reduce((a, r) => a + r.c, 0) / rs.length : 0;
+  const avgStride = rs.length ? rs.reduce((a, r) => a + r.s, 0) / rs.length : 0;
+  const wp = rs.filter((r) => r.w);
+  const avgW = wp.length ? wp.reduce((a, r) => a + r.w, 0) / wp.length : 0;
+
+  const blood = latestBlood();
+  const items = blood.items || [];
+  const normalCnt = items.filter((it) => it.val >= it.min && it.val <= it.max).length;
+  const bloodAllOk = items.length > 0 && normalCnt === items.length;
+
+  const cards = [
+    {
+      label: '身高 / 体重',
+      ic: 'ruler', color: 'var(--teal)',
+      val: (b.heightCm || '—') + '<small>cm</small> · ' + (b.weightKg || '—') + '<small>kg</small>',
+      foot: '体脂 ' + (b.bodyFatPct ? b.bodyFatPct + '%' : '—') + ' · 腰围 ' + (b.waistCm || '—') + 'cm',
+      tag: [bmi ? 'BMI ' + bmi.toFixed(1) + ' ' + bmiStatus[0] : '待录入', bmiStatus[1]]
+    },
+    {
+      label: '静息心率 / 血压',
+      ic: 'pulse', color: 'var(--rose)',
+      val: (b.restingHr || '—') + '<small>bpm</small> · ' + (b.bpSys || '—') + '/' + (b.bpDia || '—'),
+      foot: '血氧 ' + (b.spo2 || 99) + '% · ' + b.date,
+      tag: [b.bpSys && b.bpSys < 125 && b.bpDia < 82 ? '血压理想' : '正常范围', 'ok']
+    },
+    {
+      label: '累计跑步里程',
+      ic: 'run', color: 'var(--blue)',
+      val: nice(totalKm, 1) + '<small>km</small>',
+      foot: '共 ' + rs.length + ' 次 · 单次均 ' + (rs.length ? nice(totalKm / rs.length, 2) : 0) + ' km',
+      tag: [rs.length + ' 次训练', 'blue']
+    },
+    {
+      label: '平均配速 (加权)',
+      ic: 'timer', color: 'var(--purple)',
+      val: paceStr(avgPace) + '<small>/km</small>',
+      foot: bestRun ? '最佳 ' + paceStr(bestRun.p) + ' (' + bestRun.d + ')' : '—',
+      tag: [avgPace && avgPace <= 235 ? '优秀配速' : '有氧耐力', 'ok']
+    },
+    {
+      label: '步频 / 步长 / 功率',
+      ic: 'bolt', color: 'var(--amber)',
+      val: Math.round(avgCad) + '<small>spm</small> · ' + nice(avgStride, 2) + '<small>m</small>',
+      foot: '均功率 ' + (avgW ? Math.round(avgW) + ' W' : '—') + ' (' + wp.length + '次)',
+      tag: [avgStride >= 1.55 ? '大步幅推进' : '稳态步幅', 'blue']
+    },
+    {
+      label: '血液生化指标',
+      ic: 'shield', color: 'var(--ok)',
+      val: normalCnt + '/' + items.length + '<small>项达标</small>',
+      foot: '最近化验：' + blood.date,
+      tag: [bloodAllOk ? '全部正常' : (items.length - normalCnt) + ' 项关注', bloodAllOk ? 'ok' : 'warn']
+    }
+  ];
+
+  $('kpiGrid').innerHTML = cards.map((c) => `
+    <div class="kpi">
+      <div class="kpi-top">
+        <span class="kpi-label">${esc(c.label)}</span>
+        <span class="kpi-ic" style="background:color-mix(in srgb,${c.color} 13%,transparent);color:${c.color}">${ICONS[c.ic]}</span>
+      </div>
+      <div class="kpi-val">${c.val}</div>
+      <div class="kpi-foot">
+        <span style="overflow:hidden;text-overflow:ellipsis">${esc(c.foot)}</span>
+        <span class="tag ${c.tag[1]}">${esc(c.tag[0])}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function drawTrendChart(rs) {
+  const svg = $('svgTrend');
+  const W = 780, H = 250, PL = 46, PR = 42, PT = 14, PB = 28;
+  if (rs.length < 2) {
+    svg.innerHTML = `<text x="${W/2}" y="${H/2}" text-anchor="middle" class="axis-txt">当前筛选范围内训练不足 2 次</text>`;
+    return;
+  }
+  const n = rs.length;
+  const X = (i) => PL + (i / (n - 1)) * (W - PL - PR);
+
+  const pVals = rs.map((r) => r.p);
+  const pMin = Math.min(...pVals, 210), pMax = Math.max(...pVals, 265);
+  const pTop = pMin - 6, pBot = pMax + 8;
+  const Yp = (p) => PT + ((p - pTop) / (pBot - pTop)) * (H - PT - PB);
+
+  const cVals = rs.map((r) => r.c);
+  const cMin = Math.min(...cVals) - 4, cMax = Math.max(...cVals) + 6;
+  const Yc = (c) => PT + ((cMax - c) / (cMax - cMin)) * (H - PT - PB);
+
+  const ma = rs.map((_, i) => {
+    const s = Math.max(0, i - 2), e = Math.min(n - 1, i + 2);
+    const slice = rs.slice(s, e + 1);
+    return slice.reduce((a, x) => a + x.p, 0) / slice.length;
+  });
+
+  let grid = '';
+  for (let i = 0; i <= 4; i++) {
+    const y = PT + (i / 4) * (H - PT - PB);
+    const p = pTop + (i / 4) * (pBot - pTop);
+    const c = cMax - (i / 4) * (cMax - cMin);
+    grid += `<line class="grid-line" x1="${PL}" y1="${nice(y)}" x2="${W - PR}" y2="${nice(y)}"/>`;
+    grid += `<text x="${PL - 7}" y="${nice(y + 3.5)}" text-anchor="end" class="axis-txt">${paceStr(p)}</text>`;
+    grid += `<text x="${W - PR + 7}" y="${nice(y + 3.5)}" text-anchor="start" class="axis-txt">${Math.round(c)}</text>`;
+  }
+
+  const yGoal = Yp(230);
+  const goalLine = (yGoal >= PT && yGoal <= H - PB)
+    ? `<line x1="${PL}" y1="${nice(yGoal)}" x2="${W - PR}" y2="${nice(yGoal)}" stroke="var(--ok)" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.8"/>
+       <text x="${W - PR - 4}" y="${nice(yGoal - 4)}" text-anchor="end" class="axis-txt" style="fill:var(--ok)">3'50" 参考线</text>`
+    : '';
+
+  const tickCount = Math.min(7, n);
+  let xTicks = '';
+  for (let k = 0; k < tickCount; k++) {
+    const idx = Math.round((k / (tickCount - 1)) * (n - 1));
+    const x = X(idx);
+    const label = rs[idx].d.slice(2);
+    xTicks += `<line class="grid-line" x1="${nice(x)}" y1="${H - PB}" x2="${nice(x)}" y2="${H - PB + 4}"/>
+               <text x="${nice(x)}" y="${H - PB + 16}" text-anchor="middle" class="axis-txt">${label}</text>`;
+  }
+
+  const maPath = ma.map((v, i) => (i ? 'L' : 'M') + nice(X(i)) + ' ' + nice(Yp(v))).join(' ');
+  const areaPath = maPath + ` L${nice(X(n - 1))} ${H - PB} L${nice(X(0))} ${H - PB} Z`;
+  const cadPath = rs.map((r, i) => (i ? 'L' : 'M') + nice(X(i)) + ' ' + nice(Yc(r.c))).join(' ');
+
+  const dots = rs.map((r, i) => {
+    const fast = r.p <= 220;
+    return `<circle cx="${nice(X(i))}" cy="${nice(Yp(r.p))}" r="${fast ? 3.6 : 2.7}" fill="${fast ? 'var(--ok)' : 'var(--blue)'}" fill-opacity="0.88" stroke="var(--card)" stroke-width="1"/>`;
+  }).join('');
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--blue)" stop-opacity="0.22"/>
+        <stop offset="100%" stop-color="var(--blue)" stop-opacity="0.0"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    ${goalLine}
+    ${xTicks}
+    <path d="${areaPath}" fill="url(#trendGrad)"/>
+    <path d="${cadPath}" fill="none" stroke="var(--amber)" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.78"/>
+    <path d="${maPath}" fill="none" stroke="var(--blue)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots}
+    <line id="trendHoverLine" x1="0" y1="${PT}" x2="0" y2="${H - PB}" stroke="var(--fg3)" stroke-width="1" stroke-dasharray="2 2" visibility="hidden"/>
+  `;
+
+  const tip = $('tip');
+  const hLine = $('trendHoverLine');
+  svg.onmousemove = (e) => {
+    const box = svg.getBoundingClientRect();
+    const px = ((e.clientX - box.left) / box.width) * W;
+    const idx = Math.max(0, Math.min(n - 1, Math.round(((px - PL) / (W - PL - PR)) * (n - 1))));
+    const r = rs[idx];
+    const cx = X(idx);
+    hLine.setAttribute('x1', nice(cx));
+    hLine.setAttribute('x2', nice(cx));
+    hLine.setAttribute('visibility', 'visible');
+    tip.innerHTML = `<b>#${idx + 1} · ${esc(r.d)} ${esc(r.t || '')}</b><br>` +
+      `距离：${r.km} km · 配速：<b>${paceStr(r.p)}/km</b><br>` +
+      `5次均配速：${paceStr(ma[idx])}/km<br>` +
+      `步频：${r.c} spm · 步长：${r.s} m` +
+      (r.w ? `<br>功率：${r.w} W · 热量：${r.kcal || '—'} kcal` : '');
+    tip.style.left = Math.min(window.innerWidth - 240, e.clientX + 14) + 'px';
+    tip.style.top = Math.max(12, e.clientY - 18) + 'px';
+    tip.classList.add('on');
+  };
+  svg.onmouseleave = () => {
+    tip.classList.remove('on');
+    hLine.setAttribute('visibility', 'hidden');
+  };
+}
+
+function drawScatterChart(rs) {
+  const svg = $('svgScatter');
+  const W = 460, H = 235, PL = 42, PR = 18, PT = 14, PB = 30;
+  if (!rs.length) { svg.innerHTML = ''; return; }
+
+  const cMin = Math.min(...rs.map((r) => r.c)) - 4;
+  const cMax = Math.max(...rs.map((r) => r.c)) + 4;
+  const sMin = Math.max(1.0, Math.min(...rs.map((r) => r.s)) - 0.08);
+  const sMax = Math.min(2.15, Math.max(...rs.map((r) => r.s)) + 0.08);
+
+  const X = (c) => PL + ((c - cMin) / (cMax - cMin)) * (W - PL - PR);
+  const Y = (s) => PT + ((sMax - s) / (sMax - sMin)) * (H - PT - PB);
+
+  let grid = '';
+  for (let i = 0; i <= 4; i++) {
+    const y = PT + (i / 4) * (H - PT - PB);
+    const s = sMax - (i / 4) * (sMax - sMin);
+    grid += `<line class="grid-line" x1="${PL}" y1="${nice(y)}" x2="${W - PR}" y2="${nice(y)}"/>`;
+    grid += `<text x="${PL - 6}" y="${nice(y + 3.5)}" text-anchor="end" class="axis-txt">${s.toFixed(2)}m</text>`;
+  }
+  for (let i = 0; i <= 4; i++) {
+    const x = PL + (i / 4) * (W - PL - PR);
+    const c = cMin + (i / 4) * (cMax - cMin);
+    grid += `<text x="${nice(x)}" y="${H - PB + 16}" text-anchor="middle" class="axis-txt">${Math.round(c)}spm</text>`;
+  }
+
+  let isoCurves = '';
+  [210, 225, 240, 255].forEach((pSec) => {
+    const pts = [];
+    for (let c = cMin; c <= cMax; c += 1.5) {
+      const s = 60000 / (pSec * c);
+      if (s >= sMin && s <= sMax) pts.push(`${pts.length ? 'L' : 'M'}${nice(X(c))} ${nice(Y(s))}`);
+    }
+    if (pts.length > 2) {
+      isoCurves += `<path d="${pts.join(' ')}" fill="none" stroke="var(--bd)" stroke-width="1" stroke-dasharray="3 3"/>`;
+      const midPt = pts[Math.floor(pts.length * 0.82)].slice(1).split(' ');
+      isoCurves += `<text x="${midPt[0]}" y="${Number(midPt[1]) - 3}" class="axis-txt" style="font-size:9.5px">${paceStr(pSec)}</text>`;
+    }
+  });
+
+  const dots = rs.map((r, i) => {
+    const ratio = rs.length > 1 ? i / (rs.length - 1) : 1;
+    const op = (0.32 + 0.65 * ratio).toFixed(2);
+    return `<circle cx="${nice(X(r.c))}" cy="${nice(Y(r.s))}" r="${2.8 + Math.min(2.2, r.km * 0.45)}" fill="var(--purple)" fill-opacity="${op}" stroke="var(--card)" stroke-width="0.9">
+      <title>${esc(r.d)} · ${r.km}km · ${paceStr(r.p)}/km · 步频 ${r.c}spm × 步长 ${r.s}m</title>
+    </circle>`;
+  }).join('');
+
+  svg.innerHTML = grid + isoCurves + dots;
+}
+
+function drawMonthlyAndDist(rs) {
+  const svgM = $('svgMonthly');
+  const byMonth = {};
+  rs.forEach((r) => {
+    const ym = r.d.slice(0, 7);
+    if (!byMonth[ym]) byMonth[ym] = { km: 0, cnt: 0 };
+    byMonth[ym].km += r.km;
+    byMonth[ym].cnt += 1;
+  });
+  const keys = Object.keys(byMonth).sort().slice(-12);
+  const W = 400, H = 220, PL = 32, PR = 10, PT = 18, PB = 34;
+  if (!keys.length) { svgM.innerHTML = ''; } else {
+    const maxKm = Math.max(...keys.map((k) => byMonth[k].km), 5);
+    const slot = (W - PL - PR) / keys.length;
+    const bw = Math.min(22, slot * 0.62);
+    let out = '';
+    for (let i = 0; i <= 3; i++) {
+      const y = PT + (i / 3) * (H - PT - PB);
+      const v = maxKm * (1 - i / 3);
+      out += `<line class="grid-line" x1="${PL}" y1="${nice(y)}" x2="${W - PR}" y2="${nice(y)}"/>
+              <text x="${PL - 5}" y="${nice(y + 3.5)}" text-anchor="end" class="axis-txt">${Math.round(v)}</text>`;
+    }
+    keys.forEach((k, i) => {
+      const { km, cnt } = byMonth[k];
+      const bh = (km / maxKm) * (H - PT - PB);
+      const x = PL + i * slot + (slot - bw) / 2;
+      const y = H - PB - bh;
+      out += `<rect x="${nice(x)}" y="${nice(y)}" width="${nice(bw)}" height="${nice(bh)}" rx="4" fill="var(--blue)" fill-opacity="0.86">
+                <title>${k}：${nice(km, 1)} km（${cnt} 次训练）</title>
+              </rect>
+              <text x="${nice(x + bw / 2)}" y="${nice(y - 4)}" text-anchor="middle" class="axis-txt" style="font-size:9.5px">${nice(km, 1)}</text>
+              <text x="${nice(x + bw / 2)}" y="${H - PB + 14}" text-anchor="middle" class="axis-txt" style="font-size:9.5px">${k.slice(2)}</text>`;
+    });
+    svgM.innerHTML = out;
+  }
+
+  const svgD = $('svgDistBox');
+  const buckets = [
+    { name: '0.8 km 档', test: (d) => d < 0.9 },
+    { name: '1.0 km 标测', test: (d) => d >= 0.9 && d < 1.3 },
+    { name: '1.5–2.2 km', test: (d) => d >= 1.3 && d < 2.5 },
+    { name: '3.0 km+ 耐力', test: (d) => d >= 2.5 },
+  ];
+  const stats = buckets.map((b) => {
+    const sub = rs.filter((r) => b.test(r.km));
+    if (!sub.length) return null;
+    const ps = sub.map((r) => r.p).sort((a, z) => a - z);
+    const avg = ps.reduce((a, v) => a + v, 0) / ps.length;
+    return { name: b.name, n: sub.length, min: ps[0], avg, max: ps[ps.length - 1] };
+  }).filter(Boolean);
+
+  const DW = 320, DH = 220, DPL = 78, DPR = 16, DPT = 18, DPB = 28;
+  if (!stats.length) { svgD.innerHTML = ''; return; }
+  const pMin = Math.min(...stats.map((s) => s.min)) - 6;
+  const pMax = Math.max(...stats.map((s) => s.max)) + 6;
+  const Xd = (p) => DPL + ((p - pMin) / (pMax - pMin)) * (DW - DPL - DPR);
+
+  let dOut = '';
+  [pMin + 6, (pMin + pMax) / 2, pMax - 6].forEach((p) => {
+    const x = Xd(p);
+    dOut += `<line class="grid-line" x1="${nice(x)}" y1="${DPT}" x2="${nice(x)}" y2="${DH - DPB}"/>
+             <text x="${nice(x)}" y="${DH - DPB + 15}" text-anchor="middle" class="axis-txt">${paceStr(p)}</text>`;
+  });
+
+  const rowH = (DH - DPT - DPB) / stats.length;
+  stats.forEach((s, i) => {
+    const cy = DPT + (i + 0.5) * rowH;
+    const x1 = Xd(s.min), xm = Xd(s.avg), x2 = Xd(s.max);
+    dOut += `
+      <text x="${DPL - 8}" y="${nice(cy - 2)}" text-anchor="end" class="axis-txt" style="fill:var(--fg);font-weight:600">${s.name}</text>
+      <text x="${DPL - 8}" y="${nice(cy + 10)}" text-anchor="end" class="axis-txt">${s.n} 次</text>
+      <line x1="${nice(x1)}" y1="${nice(cy)}" x2="${nice(x2)}" y2="${nice(cy)}" stroke="var(--blue)" stroke-width="5" stroke-linecap="round" stroke-opacity="0.25"/>
+      <circle cx="${nice(x1)}" cy="${nice(cy)}" r="3.5" fill="var(--ok)"><title>最快 ${paceStr(s.min)}</title></circle>
+      <circle cx="${nice(xm)}" cy="${nice(cy)}" r="4.5" fill="var(--blue)" stroke="var(--card)" stroke-width="1.2"><title>平均 ${paceStr(s.avg)}</title></circle>
+      <circle cx="${nice(x2)}" cy="${nice(cy)}" r="3.5" fill="var(--amber)"><title>最慢 ${paceStr(s.max)}</title></circle>
+      <text x="${nice(xm)}" y="${nice(cy - 8)}" text-anchor="middle" class="axis-txt" style="fill:var(--blue);font-weight:600">${paceStr(s.avg)}</text>
+    `;
+  });
+  svgD.innerHTML = dOut;
+}
+
+function renderBodySection() {
+  const b = latestBody();
+  const p = DATA.profile || {};
+  const hM = (b.heightCm || 175) / 100;
+  const bmi = b.weightKg && hM ? b.weightKg / (hM * hM) : 21.5;
+  const pct = Math.max(4, Math.min(96, ((bmi - 15) / 15) * 100));
+  const bmr = b.weightKg && b.heightCm ? Math.round(10 * b.weightKg + 6.25 * b.heightCm - 5 * (2026 - (p.birthYear || 2004)) + 5) : 1650;
+
+  $('bodyDateSub').textContent = '更新于 ' + (b.date || '—');
+  $('bodyPanel').innerHTML = `
+    <div class="body-hero">
+      <div class="bmi-box">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span style="font-size:12px;color:var(--fg2)">身体质量指数 (BMI)</span>
+            <span class="tag ok">${bmi < 18.5 ? '偏瘦' : bmi < 24 ? '正常 (18.5–23.9)' : '超重'}</span>
+          </div>
+          <div style="font-size:26px;font-weight:750;margin-top:4px;font-variant-numeric:tabular-nums">
+            ${bmi.toFixed(1)} <small style="font-size:12px;font-weight:400;color:var(--fg3)">kg/m²</small>
+          </div>
+        </div>
+        <div>
+          <div class="bmi-scale"><div class="bmi-pin" style="left:${pct}%"></div></div>
+          <div class="bmi-ticks"><span>15</span><span>18.5</span><span>24</span><span>28</span><span>30</span></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--fg2);display:flex;justify-content:space-between;border-top:1px solid var(--bd2);padding-top:6px">
+          <span>基础代谢估算</span>
+          <b>${bmr} kcal/天</b>
+        </div>
+      </div>
+      <div class="vitals-mini">
+        <div class="v-cell"><div class="k">身高</div><div class="v">${b.heightCm || '—'}<small>cm</small></div></div>
+        <div class="v-cell"><div class="k">体重</div><div class="v">${b.weightKg || '—'}<small>kg</small></div></div>
+        <div class="v-cell"><div class="k">体脂率</div><div class="v">${b.bodyFatPct || '—'}<small>%</small></div></div>
+        <div class="v-cell"><div class="k">去脂体重</div><div class="v">${b.muscleKg || '—'}<small>kg</small></div></div>
+        <div class="v-cell"><div class="k">静息心率</div><div class="v">${b.restingHr || '—'}<small>bpm</small></div></div>
+        <div class="v-cell"><div class="k">血压</div><div class="v">${b.bpSys || '—'}/${b.bpDia || '—'}<small>mmHg</small></div></div>
+      </div>
+    </div>
+  `;
+
+  const recs = (DATA.bodyRecords || []).slice().sort((a, z) => z.date.localeCompare(a.date));
+  $('weightHistoryBox').innerHTML = `
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>测量日期</th>
+            <th>身高 (cm)</th>
+            <th>体重 (kg)</th>
+            <th>BMI</th>
+            <th>体脂率 (%)</th>
+            <th>腰围 (cm)</th>
+            <th>静息心率</th>
+            <th>血压 (mmHg)</th>
+            <th>血氧</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${recs.map((r) => {
+            const rBmi = r.weightKg && r.heightCm ? (r.weightKg / Math.pow(r.heightCm / 100, 2)).toFixed(1) : '—';
+            return `<tr>
+              <td><b>${esc(r.date)}</b></td>
+              <td>${r.heightCm ?? '—'}</td>
+              <td><b>${r.weightKg ?? '—'}</b></td>
+              <td><span class="tag ok">${rBmi}</span></td>
+              <td>${r.bodyFatPct ?? '—'}</td>
+              <td>${r.waistCm ?? '—'}</td>
+              <td>${r.restingHr ? r.restingHr + ' bpm' : '—'}</td>
+              <td>${r.bpSys ? r.bpSys + '/' + r.bpDia : '—'}</td>
+              <td>${r.spo2 ? r.spo2 + '%' : '—'}</td>
+              <td style="color:var(--fg2)">${esc(r.note || '')}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderBloodSection() {
+  const rep = latestBlood();
+  const items = rep.items || [];
+  $('bloodSub').textContent = `化验日期：${rep.date} · 来源：${rep.source} · 共 ${items.length} 项指标`;
+
+  const cats = ['全部', ...new Set(items.map((x) => x.cat))];
+  $('bloodCatTabs').innerHTML = cats.map((c) =>
+    `<button type="button" class="cat-pill${c === BLOOD_CAT ? ' on' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`
+  ).join('');
+  $('bloodCatTabs').querySelectorAll('.cat-pill').forEach((btn) => {
+    btn.onclick = () => { BLOOD_CAT = btn.dataset.cat; renderBloodSection(); };
+  });
+
+  const shown = BLOOD_CAT === '全部' ? items : items.filter((x) => x.cat === BLOOD_CAT);
+  $('bloodGrid').innerHTML = shown.map((it) => {
+    const span = Math.max(1e-6, it.max - it.min);
+    const ratio = (it.val - it.min) / span;
+    const pos = Math.max(4, Math.min(96, 18 + ratio * 64));
+    const status = it.val < it.min ? ['偏低 ↓', 'warn'] : it.val > it.max ? ['偏高 ↑', 'danger'] : ['正常', 'ok'];
+    return `
+      <div class="lab-item">
+        <div class="lab-top">
+          <span class="lab-name">${esc(it.name)} <span class="lab-code">${esc(it.code)}</span></span>
+          <span class="tag ${status[1]}">${status[0]}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="lab-val">${it.val}<small>${esc(it.unit)}</small></span>
+          <span style="font-size:11px;color:var(--fg3)">${esc(it.cat)}</span>
+        </div>
+        <div>
+          <div class="range-track"><div class="range-safe"></div></div>
+          <div class="range-dot ${status[1]}"><i style="left:${nice(pos, 1)}%"></i></div>
+        </div>
+        <div class="lab-foot">
+          <span>下限 ${it.min}</span>
+          <span>参考 ${it.min}–${it.max} ${esc(it.unit)}</span>
+          <span>上限 ${it.max}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderLogsTable(rs) {
+  const rev = rs.slice().reverse();
+  const shown = SHOW_ALL_LOGS ? rev : rev.slice(0, 15);
+  $('logTableSub').textContent = `当前筛选共 ${rev.length} 条记录 · 显示前 ${shown.length} 条`;
+  const btn = $('btnToggleAllLogs');
+  btn.textContent = SHOW_ALL_LOGS ? '收起至最近 15 条' : `展开全部 ${rev.length} 条`;
+  btn.hidden = rev.length <= 15;
+
+  $('runTable').querySelector('tbody').innerHTML = shown.map((r) => {
+    const badge = r.p <= 215 ? ['极速 <3\'35"', 'ok'] : r.p <= 230 ? ['达标 <3\'50"', 'blue'] : ['有氧训练', ''];
+    return `<tr>
+      <td><b>${esc(r.d)}</b> <span style="color:var(--fg3)">${esc(r.t || '')}</span></td>
+      <td><b>${r.km.toFixed(2)}</b> km</td>
+      <td>${durStr(r.dur || Math.round(r.km * r.p))}</td>
+      <td><b>${paceStr(r.p)}</b>/km</td>
+      <td>${r.c} spm</td>
+      <td>${r.s.toFixed(2)} m</td>
+      <td>${r.w ? r.w + ' W' : '—'}</td>
+      <td>${r.kcal ? r.kcal + ' kcal' : '—'}</td>
+      <td>${r.load ?? '—'}</td>
+      <td><span class="tag ${badge[1]}">${badge[0]}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function applyViewFilter() {
+  document.querySelectorAll('#bentoGrid > section[data-sec]').forEach((sec) => {
+    const kind = sec.getAttribute('data-sec');
+    if (VIEW === 'all') {
+      sec.hidden = (sec.id === 'secWeightHistory');
+    } else {
+      sec.hidden = (kind !== VIEW);
+    }
+  });
+}
+
+function renderAll() {
+  const rs = filteredRuns();
+  const runTab = document.querySelector('#viewTabs button[data-view="run"]');
+  if (runTab) runTab.lastChild.textContent = `跑步表现 (${(DATA.runs || []).length})`;
+  $('syncBadge').textContent = `已同步 ${(DATA.runs || []).length} 次跑步 · ${(DATA.bloodReports?.[0]?.items || []).length} 项血液指标`;
+  $('summaryLine').textContent = rs.length
+    ? `当前区间：${rs[0].d} ~ ${rs[rs.length - 1].d}（${rs.length} 次训练）`
+    : '当前筛选区间无训练记录';
+
+  renderKPIs(rs);
+  drawTrendChart(rs);
+  drawScatterChart(rs);
+  drawMonthlyAndDist(rs);
+  renderBodySection();
+  renderBloodSection();
+  renderLogsTable(rs);
+  applyViewFilter();
+}
+
+function openBodyModal() {
+  MODAL_MODE = 'body';
+  const b = latestBody();
+  const today = new Date().toISOString().slice(0, 10);
+  $('modalTitle').textContent = '录入身高 / 体重 / 身体体征';
+  $('modalHint').textContent = '新增或更新同一天的体测记录，保存后写入 .claude/preview/health/data.json。';
+  $('modalBody').innerHTML = `
+    <div class="form-grid">
+      <div class="field"><label>测量日期</label><input id="f_date" type="date" value="${today}"></div>
+      <div class="field"><label>身高 (cm)</label><input id="f_h" type="number" step="0.1" value="${b.heightCm ?? 175}"></div>
+      <div class="field"><label>体重 (kg)</label><input id="f_w" type="number" step="0.1" value="${b.weightKg ?? 66}"></div>
+      <div class="field"><label>体脂率 (%)</label><input id="f_fat" type="number" step="0.1" value="${b.bodyFatPct ?? 15.8}"></div>
+      <div class="field"><label>骨骼肌/去脂体重 (kg)</label><input id="f_mus" type="number" step="0.1" value="${b.muscleKg ?? 52.4}"></div>
+      <div class="field"><label>腰围 (cm)</label><input id="f_waist" type="number" step="0.1" value="${b.waistCm ?? 74.5}"></div>
+      <div class="field"><label>静息心率 (bpm)</label><input id="f_hr" type="number" value="${b.restingHr ?? 58}"></div>
+      <div class="field"><label>血氧饱和度 (%)</label><input id="f_spo2" type="number" value="${b.spo2 ?? 99}"></div>
+      <div class="field"><label>收缩压/高压 (mmHg)</label><input id="f_sys" type="number" value="${b.bpSys ?? 116}"></div>
+      <div class="field"><label>舒张压/低压 (mmHg)</label><input id="f_dia" type="number" value="${b.bpDia ?? 74}"></div>
+      <div class="field full"><label>备注</label><input id="f_note" placeholder="例如：晨起空腹测量 / 校医院体测" value=""></div>
+    </div>
+  `;
+  $('modalMask').classList.add('on');
+}
+
+function openBloodModal() {
+  MODAL_MODE = 'blood';
+  $('modalTitle').textContent = '新增 / 更新血液化验指标';
+  $('modalHint').textContent = '若代码 (如 WBC、ALT、UA、GLU) 已存在则更新最新数值，不存在则追加新指标。';
+  $('modalBody').innerHTML = `
+    <div class="form-grid">
+      <div class="field"><label>化验分类</label>
+        <select id="b_cat">
+          <option value="血常规">血常规</option>
+          <option value="肝功能">肝功能</option>
+          <option value="肾功能">肾功能</option>
+          <option value="血脂代谢">血脂代谢</option>
+          <option value="血糖代谢">血糖代谢</option>
+          <option value="电解质与微量元素">电解质与微量元素</option>
+          <option value="甲状腺/激素">甲状腺/激素</option>
+        </select>
+      </div>
+      <div class="field"><label>缩写代码 (如 HGB / ALT)</label><input id="b_code" placeholder="例如 HGB"></div>
+      <div class="field"><label>指标名称</label><input id="b_name" placeholder="例如 血红蛋白"></div>
+      <div class="field"><label>实测数值</label><input id="b_val" type="number" step="0.01" placeholder="例如 152"></div>
+      <div class="field"><label>参考下限 (min)</label><input id="b_min" type="number" step="0.01" placeholder="例如 130"></div>
+      <div class="field"><label>参考上限 (max)</label><input id="b_max" type="number" step="0.01" placeholder="例如 175"></div>
+      <div class="field full"><label>单位</label><input id="b_unit" placeholder="例如 g/L、μmol/L、mmol/L、U/L"></div>
+    </div>
+  `;
+  $('modalMask').classList.add('on');
+}
+
+async function handleModalSave() {
+  if (MODAL_MODE === 'body') {
+    const rec = {
+      date: $('f_date').value || new Date().toISOString().slice(0, 10),
+      heightCm: parseFloat($('f_h').value) || 175,
+      weightKg: parseFloat($('f_w').value) || 66,
+      bodyFatPct: parseFloat($('f_fat').value) || null,
+      muscleKg: parseFloat($('f_mus').value) || null,
+      waistCm: parseFloat($('f_waist').value) || null,
+      restingHr: parseInt($('f_hr').value, 10) || null,
+      spo2: parseInt($('f_spo2').value, 10) || null,
+      bpSys: parseInt($('f_sys').value, 10) || null,
+      bpDia: parseInt($('f_dia').value, 10) || null,
+      note: $('f_note').value.trim()
+    };
+    DATA.bodyRecords = (DATA.bodyRecords || []).filter((x) => x.date !== rec.date);
+    DATA.bodyRecords.push(rec);
+    if (DATA.profile) DATA.profile.heightCm = rec.heightCm;
+    $('modalMask').classList.remove('on');
+    await saveData('已更新身体体征记录');
+  } else {
+    const code = $('b_code').value.trim().toUpperCase();
+    const name = $('b_name').value.trim();
+    const val = parseFloat($('b_val').value);
+    const min = parseFloat($('b_min').value);
+    const max = parseFloat($('b_max').value);
+    const unit = $('b_unit').value.trim() || '';
+    const cat = $('b_cat').value;
+    if (!code || !name || isNaN(val) || isNaN(min) || isNaN(max)) {
+      toast('请填写完整的指标名称、实测值与参考上下限');
+      return;
+    }
+    if (!DATA.bloodReports || !DATA.bloodReports.length) {
+      DATA.bloodReports = [{ date: new Date().toISOString().slice(0, 10), source: '手动录入', items: [] }];
+    }
+    const rep = DATA.bloodReports[DATA.bloodReports.length - 1];
+    rep.date = new Date().toISOString().slice(0, 10);
+    const idx = rep.items.findIndex((x) => x.code.toUpperCase() === code);
+    const entry = { cat, code, name, val, min, max, unit };
+    if (idx >= 0) rep.items[idx] = entry; else rep.items.push(entry);
+    $('modalMask').classList.remove('on');
+    await saveData('已保存血液指标 ' + name);
+  }
+}
+
+$('rangeSel').onchange = (e) => { RANGE = e.target.value; renderAll(); };
+function switchView(id) {
+  const btn = document.querySelector(`#viewTabs button[data-view="${id}"]`);
+  if (!btn) throw new Error('未知视图 ' + id + '（可选 all / run / body / blood / logs）');
+  $('viewTabs').querySelectorAll('button').forEach((b) => b.classList.remove('on'));
+  btn.classList.add('on');
+  VIEW = id;
+  applyViewFilter();
+  return VIEW;
+}
+
+$('viewTabs').querySelectorAll('button[data-view]').forEach((btn) => {
+  btn.onclick = () => switchView(btn.dataset.view);
+});
+$('btnToggleAllLogs').onclick = () => { SHOW_ALL_LOGS = !SHOW_ALL_LOGS; renderLogsTable(filteredRuns()); };
+$('btnAddBody').onclick = openBodyModal;
+$('btnQuickBody').onclick = openBodyModal;
+$('btnAddLab').onclick = openBloodModal;
+$('modalCancel').onclick = () => $('modalMask').classList.remove('on');
+$('modalSave').onclick = handleModalSave;
+$('modalMask').onclick = (e) => { if (e.target === $('modalMask')) $('modalMask').classList.remove('on'); };
+
+/* ============================================================
+ * 卡片公开 API（ns = health-pv）——供 agent 经 CardCall 调用
+ *   宿主→卡 {type:'health-pv-cmd', cmd, ...args}   恒回 ack
+ *   卡→宿主 {type:'health-pv-event', ev:'ready'|'state'|'ack', ...}
+ * 命令：state / locate / scroll / open / close / reload / export
+ *       query.runs / query.body / query.blood
+ *       add.run / add.body / add.blood
+ * 写命令一律先落 .claude/preview/health/data.json（网关 /gateway/file/write），
+ * 网关写失败时 ack 返回 ok:false，不静默降级。
+ * ============================================================ */
+const CARD_NS = 'health-pv';
+const CARD_EMBEDDED = window.parent !== window;
+const CARD_HANDLERS = Object.create(null);
+const CARD_CMDS = [];
+const cardSend = (m) => { try { window.parent.postMessage(m, '*'); return true; } catch { return false; } };
+function cardEvent(ev, data) {
+  const m = { type: CARD_NS + '-event', ev };
+  if (data && typeof data === 'object') for (const k in data) if (!(k in m)) m[k] = data[k];
+  return cardSend(m);
+}
+function cardApi(name, fn) { CARD_HANDLERS[name] = fn; if (!CARD_CMDS.includes(name)) CARD_CMDS.push(name); }
+
+const sortRuns = () => (DATA.runs || []).slice().sort((a, b) => (a.d + (a.t || '')).localeCompare(b.d + (b.t || '')));
+const sortBody = () => (DATA.bodyRecords || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+const num = (v) => (v === null || v === undefined || v === '' ? NaN : Number(v));
+
+function cardState() {
+  const rs = sortRuns();
+  const body = sortBody();
+  const lb = body[body.length - 1] || null;
+  const rep = (DATA.bloodReports || [])[0] || null;
+  const items = rep ? rep.items || [] : [];
+  const abn = items.filter((x) => x.val < x.min || x.val > x.max)
+    .map((x) => ({ code: x.code, name: x.name, val: x.val, min: x.min, max: x.max, unit: x.unit }));
+  const last = rs[rs.length - 1] || null;
+  return {
+    card: 'health',
+    view: VIEW,
+    range: RANGE,
+    runs: {
+      count: rs.length,
+      totalKm: Math.round(rs.reduce((a, r) => a + (r.km || 0), 0) * 100) / 100,
+      totalMin: Math.round(rs.reduce((a, r) => a + (r.dur || 0), 0) / 60),
+      bestPaceSec: rs.length ? Math.min(...rs.map((r) => r.p)) : null,
+      last: last ? { d: last.d, t: last.t, km: last.km, p: last.p, c: last.c, s: last.s, w: last.w } : null,
+    },
+    body: lb ? { date: lb.date, heightCm: lb.heightCm, weightKg: lb.weightKg, bodyFatPct: lb.bodyFatPct ?? null,
+      restingHr: lb.restingHr ?? null, bp: lb.bpSys && lb.bpDia ? lb.bpSys + '/' + lb.bpDia : null } : null,
+    blood: rep ? { date: rep.date, source: rep.source, items: items.length, abnormal: abn } : null,
+    cmds: CARD_CMDS.slice(),
+  };
+}
+
+cardApi('state', () => cardState());
+
+cardApi('locate', () => {
+  const rows = document.querySelectorAll('#runTable tbody tr');
+  return { view: VIEW, total: rows.length, scrollY: Math.round(window.scrollY || 0) };
+});
+
+cardApi('scroll', (a) => {
+  const line = Math.max(1, parseInt(a.line, 10) || 1);
+  switchView('logs');
+  SHOW_ALL_LOGS = true;
+  renderLogsTable(filteredRuns());
+  const rows = document.querySelectorAll('#runTable tbody tr');
+  if (!rows.length) throw new Error('历史明细为空');
+  const row = rows[Math.min(line, rows.length) - 1];
+  row.scrollIntoView({ block: 'center' });
+  return { line: Math.min(line, rows.length), total: rows.length };
+});
+
+cardApi('open', (a) => ({ view: switchView(String(a.id || a.view || 'all')) }));
+cardApi('close', () => ({ view: switchView('all') }));
+
+cardApi('query.runs', (a) => {
+  const limit = Math.min(200, Math.max(1, parseInt(a.limit, 10) || 20));
+  let rs = sortRuns();
+  if (a.since) rs = rs.filter((r) => r.d >= String(a.since));
+  if (a.until) rs = rs.filter((r) => r.d <= String(a.until));
+  return { count: rs.length, rows: rs.slice(-limit).map((r) => ({ ...r })) };
+});
+
+cardApi('query.body', (a) => {
+  const limit = Math.min(200, Math.max(1, parseInt(a.limit, 10) || 20));
+  return { count: (DATA.bodyRecords || []).length, rows: sortBody().slice(-limit).map((r) => ({ ...r })) };
+});
+
+cardApi('query.blood', (a) => {
+  const rep = (DATA.bloodReports || [])[0];
+  if (!rep) return { date: null, items: [] };
+  let items = rep.items || [];
+  if (a.cat) items = items.filter((x) => x.cat === a.cat);
+  if (a.only_abnormal) items = items.filter((x) => x.val < x.min || x.val > x.max);
+  return { date: rep.date, source: rep.source, count: items.length, items: items.map((x) => ({ ...x })) };
+});
+
+cardApi('add.run', async (a) => {
+  const d = String(a.d || a.date || '').slice(0, 10);
+  const km = num(a.km), dur = num(a.dur);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) throw new Error('add.run 需要 d=YYYY-MM-DD');
+  if (!(km > 0)) throw new Error('add.run 需要 km > 0');
+  if (!(dur > 0)) throw new Error('add.run 需要 dur（秒）> 0');
+  const rec = {
+    d,
+    t: String(a.t || '').slice(0, 5),
+    km,
+    dur: Math.round(dur),
+    p: Math.round(num(a.p) || dur / km),
+    c: Math.round(num(a.c) || 0) || null,
+    s: num(a.s) || null,
+    w: Math.round(num(a.w) || 0) || null,
+    kcal: Math.round(num(a.kcal) || 0) || null,
+    load: Math.round(num(a.load) || 0) || null,
+    e: num(a.e) || null,
+  };
+  DATA.runs = DATA.runs || [];
+  const idx = DATA.runs.findIndex((r) => r.d === rec.d && (r.t || '') === rec.t);
+  if (idx >= 0) DATA.runs[idx] = rec; else DATA.runs.push(rec);
+  const ok = await saveData('已写入跑步记录 ' + rec.d);
+  if (!ok) throw new Error('网关写入失败：data.json 未更新（仅本地缓存）');
+  cardEvent('state', cardState());
+  return { saved: true, updated: idx >= 0, run: rec, count: DATA.runs.length };
+});
+
+cardApi('add.body', async (a) => {
+  const date = String(a.date || new Date().toISOString().slice(0, 10)).slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error('add.body 需要 date=YYYY-MM-DD');
+  const rec = { date };
+  const map = { heightCm: 'heightCm', weightKg: 'weightKg', bodyFatPct: 'bodyFatPct', muscleKg: 'muscleKg',
+    waistCm: 'waistCm', restingHr: 'restingHr', bpSys: 'bpSys', bpDia: 'bpDia', spo2: 'spo2' };
+  for (const k in map) if (a[map[k]] !== undefined && a[map[k]] !== null && a[map[k]] !== '') rec[map[k]] = num(a[map[k]]);
+  if (a.note) rec.note = String(a.note);
+  if (!rec.weightKg && !rec.bodyFatPct && !rec.restingHr && !rec.bpSys) throw new Error('add.body 至少需要 weightKg / bodyFatPct / restingHr / bpSys 之一');
+  const prev = (DATA.bodyRecords || []).find((x) => x.date === date) || {};
+  const merged = { ...prev, ...rec };
+  DATA.bodyRecords = (DATA.bodyRecords || []).filter((x) => x.date !== date);
+  DATA.bodyRecords.push(merged);
+  if (DATA.profile && merged.heightCm) DATA.profile.heightCm = merged.heightCm;
+  const ok = await saveData('已写入体征记录 ' + date);
+  if (!ok) throw new Error('网关写入失败：data.json 未更新（仅本地缓存）');
+  cardEvent('state', cardState());
+  return { saved: true, record: merged, count: DATA.bodyRecords.length };
+});
+
+cardApi('add.blood', async (a) => {
+  const items = Array.isArray(a.items) ? a.items : [];
+  if (!items.length) throw new Error('add.blood 需要 items[]（cat/code/name/val/min/max/unit）');
+  const date = String(a.date || new Date().toISOString().slice(0, 10)).slice(0, 10);
+  DATA.bloodReports = DATA.bloodReports || [];
+  let rep = DATA.bloodReports.find((x) => x.date === date);
+  if (!rep) { rep = { date, source: String(a.source || 'API 录入'), items: [] }; DATA.bloodReports.unshift(rep); }
+  if (a.source) rep.source = String(a.source);
+  let added = 0, updated = 0;
+  for (const it of items) {
+    const code = String(it.code || '').trim().toUpperCase();
+    const val = num(it.val), min = num(it.min), max = num(it.max);
+    if (!code || !it.name || isNaN(val) || isNaN(min) || isNaN(max)) throw new Error('指标字段不完整：' + JSON.stringify(it));
+    const entry = { cat: String(it.cat || '其他'), code, name: String(it.name), val, min, max, unit: String(it.unit || '') };
+    const i = rep.items.findIndex((x) => String(x.code).toUpperCase() === code);
+    if (i >= 0) { rep.items[i] = entry; updated++; } else { rep.items.push(entry); added++; }
+  }
+  DATA.bloodReports.sort((x, y) => y.date.localeCompare(x.date));
+  const ok = await saveData('已写入化验指标 ' + items.length + ' 项');
+  if (!ok) throw new Error('网关写入失败：data.json 未更新（仅本地缓存）');
+  cardEvent('state', cardState());
+  return { saved: true, date, added, updated, total: rep.items.length };
+});
+
+cardApi('export', () => {
+  const s = JSON.stringify(DATA);
+  return { bytes: s.length, data: DATA };
+});
+
+cardApi('reload', async () => {
+  await loadData();
+  cardEvent('state', cardState());
+  return cardState();
+});
+
+if (CARD_EMBEDDED) {
+  window.addEventListener('message', (e) => {
+    if (e.source !== window.parent) return;
+    const d = e.data;
+    if (!d || typeof d !== 'object' || d.type !== CARD_NS + '-cmd') return;
+    const h = CARD_HANDLERS[d.cmd];
+    if (typeof h !== 'function') return void cardEvent('ack', { cmd: d.cmd, ok: false, error: '未注册的命令 ' + d.cmd });
+    Promise.resolve()
+      .then(() => h(d))
+      .then(
+        (result) => cardEvent('ack', { cmd: d.cmd, ok: true, result: result === undefined ? null : result }),
+        (err) => cardEvent('ack', { cmd: d.cmd, ok: false, error: String((err && err.message) || err) }),
+      );
+  });
+}
+
+mountIcons();
+loadData().then(() => {
+  if (CARD_EMBEDDED) cardEvent('ready', { ns: CARD_NS, cmds: CARD_CMDS, state: cardState() });
+});
+</script>
+</body>
+</html>

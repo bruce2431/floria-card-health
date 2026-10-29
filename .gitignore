@@ -1,0 +1,3 @@
+# 真实健康数据只留本地，永不入库
+data.json
+*.local.json
